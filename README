@@ -1,0 +1,9 @@
+PacketParser package.
+
+/analyzer -- Analyzer library
+/parsers -- Protocol parser libraries
+/visualizer_cli -- Visualizer test application (CLI)
+/tests -- Some test captures
+
+
+

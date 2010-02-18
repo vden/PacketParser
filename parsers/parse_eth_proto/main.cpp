@@ -5,7 +5,7 @@
  *      Author: vden
  */
 
-#include "../src/global.h"
+#include <global.h>
 
 #include <cstring>
 #include "main.h"

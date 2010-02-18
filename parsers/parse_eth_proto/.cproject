@@ -29,11 +29,17 @@
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.587591834" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug">
 <option id="gnu.cpp.compiler.so.debug.option.optimization.level.2084933671" name="Optimization Level" superClass="gnu.cpp.compiler.so.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.so.debug.option.debugging.level.316473931" name="Debug Level" superClass="gnu.cpp.compiler.so.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+<option id="gnu.cpp.compiler.option.include.paths.1835733695" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="/home/vden/work/PacketParser/src"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1032105006" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1340609965" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.debug">
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.so.debug.option.optimization.level.1564492262" name="Optimization Level" superClass="gnu.c.compiler.so.debug.option.optimization.level" valueType="enumerated"/>
 <option id="gnu.c.compiler.so.debug.option.debugging.level.2135092138" name="Debug Level" superClass="gnu.c.compiler.so.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+<option id="gnu.c.compiler.option.include.paths.1407692055" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="/home/vden/work/PacketParser/src"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.943454218" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.1729332760" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug">
