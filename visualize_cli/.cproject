@@ -19,7 +19,12 @@
 <folderInfo id="cdt.managedbuild.config.gnu.exe.debug.942755471." name="/" resourcePath="">
 <toolChain id="cdt.managedbuild.toolchain.gnu.exe.debug.1754020273" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.exe.debug">
 <targetPlatform id="cdt.managedbuild.target.gnu.platform.exe.debug.1107014790" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.exe.debug"/>
-<builder buildPath="${workspace_loc:/visualizer_cli/Debug}" id="cdt.managedbuild.target.gnu.builder.exe.debug.1977247015" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.exe.debug"/>
+<builder buildPath="${workspace_loc:/visualizer_cli/Debug}" id="cdt.managedbuild.target.gnu.builder.exe.debug.1977247015" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.exe.debug">
+<outputEntries>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug"/>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Release"/>
+</outputEntries>
+</builder>
 <tool id="cdt.managedbuild.tool.gnu.archiver.base.1845508780" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.328775757" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
 <option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1107141272" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
@@ -44,7 +49,6 @@
 <listOptionValue builtIn="false" value="analyzer"/>
 </option>
 <option id="gnu.cpp.link.option.paths.1531559284" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-<listOptionValue builtIn="false" value="."/>
 <listOptionValue builtIn="false" value="/home/vden/work/PacketParser/src"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.2098148264" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
@@ -53,13 +57,15 @@
 </inputType>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.1650347333" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug">
+<option id="gnu.both.asm.option.include.paths.214526945" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="/home/vden/work/PacketParser/src"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.assembler.input.974821867" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 </tool>
 </toolChain>
 </folderInfo>
 <sourceEntries>
 <entry excluding="global" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="global"/>
 </sourceEntries>
 </configuration>
 </storageModule>
