@@ -1,7 +1,8 @@
 #include <dlfcn.h>
 #include <algorithm>
-
+#include <dirent.h>
 #include <global.h>
+#include <cstring>
 #include "packetparser.h"
 
 PacketInfo* test_parse_fn(char* buf, int len) {
@@ -12,13 +13,24 @@ PacketInfo* test_parse_fn(char* buf, int len) {
 }
 
 PacketParser::PacketParser(string path) {
-
-	string libs[] = {"./libparse_eth_proto.so", "./libparse_wlan_proto.so"};
-	int libs_len = 2;
-
 	void* h;
-	for (int i=0; i<libs_len; i++) {
-		h = dlopen(libs[i].c_str(), RTLD_LAZY);
+
+#ifdef WIN32
+
+#else // WIN32
+	DIR *dp;
+	struct dirent *dir;
+	if((dp = opendir(path.c_str())) == NULL) {
+		cerr << "Error opening " << path << endl;
+	}
+
+	while ((dir = readdir(dp)) != NULL) {
+#endif //WIN32
+
+		if (strncmp(dir->d_name, "libparse", 8))
+			continue;
+
+		h = dlopen(dir->d_name, RTLD_LAZY);
 		if (!h) {
 			cerr << "LOAD ERR: " << dlerror() << endl;
 		}
@@ -46,6 +58,12 @@ PacketParser::PacketParser(string path) {
 
 		handles.push_back(h);
 	}
+
+#ifdef WIN32
+
+#else
+	closedir(dp);
+#endif
 	parse_fns["test"] = test_parse_fn;
 }
 
