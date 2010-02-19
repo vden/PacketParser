@@ -5,13 +5,9 @@ Analyzer::Analyzer() {
 	parser = new PacketParser("./");
 }
 
-const string Analyzer::findProto(char* buf, int len){
-	return "wlan";
-}
-
 bool Analyzer::nextPacket(char *buf, int len) {
 	PacketInfo *p = new PacketInfo;
-	string proto = findProto(buf, len);
+	string proto = parser->findProto(buf, len);
 	string errorField = proto + ".error";
 
 	if (!parser->parse(buf, len, p, proto)) {

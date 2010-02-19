@@ -11,7 +11,7 @@
 extern "C" {
 	string proto();
 	_TAGS tags();
-
+	bool findProto(char*, int);
 	PacketInfo* parse(char*, int);
 }
 

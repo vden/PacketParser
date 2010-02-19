@@ -262,3 +262,7 @@ _TAGS tags() {
 
 	return s;
 };
+
+bool findProto(char* buf, int len) {
+	return true;
+}

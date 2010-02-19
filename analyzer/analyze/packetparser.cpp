@@ -20,7 +20,7 @@ PacketParser::PacketParser(string path) {
 	for (int i=0; i<libs_len; i++) {
 		h = dlopen(libs[i].c_str(), RTLD_LAZY);
 		if (!h) {
-			cout << "LOAD ERR: " << dlerror() << endl;
+			cerr << "LOAD ERR: " << dlerror() << endl;
 		}
 
 		parse_fn fn;
@@ -29,6 +29,8 @@ PacketParser::PacketParser(string path) {
 		proto = (proto_fn)dlsym(h, "proto");
 		tags_fn tags;
 		tags = (tags_fn)dlsym(h, "tags");
+		find_fn find;
+		find = (find_fn)dlsym(h, "findProto");
 
 		cout << "Proto loaded: " << proto() << endl;
 
@@ -40,6 +42,8 @@ PacketParser::PacketParser(string path) {
 		};
 
 		parse_fns[proto()] = fn;
+		find_fns[proto()] = find;
+
 		handles.push_back(h);
 	}
 	parse_fns["test"] = test_parse_fn;
@@ -47,10 +51,23 @@ PacketParser::PacketParser(string path) {
 
 PacketParser::~PacketParser() {
 	for_each(handles.begin(), handles.end(), dlclose);
-//	dlclose(handle);
+	//	dlclose(handle);
 }
 
+string PacketParser::findProto(char* buf, int len) {
+	map<string,find_fn>::iterator it;
+
+	for (it=find_fns.begin();it!=find_fns.end();it++) {
+		if (it->second(buf,len))
+			return it->first;
+	}
+	// return "null" meta-protocol, if no one can parse buf
+	return "null";
+};
+
 bool PacketParser::parse(char* buf, int len, PacketInfo* pi, string proto) {
+	if (proto == "null") return false;
+
 	parse_fn p;
 	p = parse_fns.find(proto)->second;
 

@@ -33,7 +33,12 @@ PacketInfo* parse(char* buf, int len) {
 
 _TAGS tags() {
 	string ds[] = {"data", "dest", "src", "type"};
-	_TAGS s( ds, ds + 1);
+	_TAGS s( ds, ds + 4);
 
 	return s;
+};
+
+
+bool findProto(char* buf, int len) {
+	return false;
 }
