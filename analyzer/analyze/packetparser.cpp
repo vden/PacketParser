@@ -16,17 +16,16 @@ PacketParser::PacketParser(string path) {
 	void* h;
 
 #ifdef WIN32
-	  flist           list = { 0, 0, NULL };
-	  HANDLE          h;
-	  WIN32_FIND_DATA info;
-	  int             i;
+	flist list = {0, 0, NULL};
+	HANDLE h;
+	WIN32_FIND_DATA info;
+	int i;
 
-	  // build a list of files
-	  h = FindFirstFile("libparse*.*", &info);
-	  if (h != INVALID_HANDLE_VALUE)
-	  {
-	    do
-	    {
+	SetCurrentDirectory(path.c_str());
+	// build a list of files
+	h = FindFirstFile("libparse*.*", &info);
+	if (h != INVALID_HANDLE_VALUE) {
+		do {
 
 #else // WIN32
 	DIR *dp;
@@ -54,8 +53,6 @@ PacketParser::PacketParser(string path) {
 		find = (find_fn)dlsym(h, "findProto");
 
 #endif //WIN32
-
-
 
 		cout << "Proto loaded: " << proto() << endl;
 
