@@ -13,6 +13,10 @@
 #include <deque>
 #include <vector>
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include <sys/types.h>
 
 using namespace std;

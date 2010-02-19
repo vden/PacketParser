@@ -16,6 +16,17 @@ PacketParser::PacketParser(string path) {
 	void* h;
 
 #ifdef WIN32
+	  flist           list = { 0, 0, NULL };
+	  HANDLE          h;
+	  WIN32_FIND_DATA info;
+	  int             i;
+
+	  // build a list of files
+	  h = FindFirstFile("libparse*.*", &info);
+	  if (h != INVALID_HANDLE_VALUE)
+	  {
+	    do
+	    {
 
 #else // WIN32
 	DIR *dp;
@@ -25,8 +36,6 @@ PacketParser::PacketParser(string path) {
 	}
 
 	while ((dir = readdir(dp)) != NULL) {
-#endif //WIN32
-
 		if (strncmp(dir->d_name, "libparse", 8))
 			continue;
 
@@ -44,6 +53,10 @@ PacketParser::PacketParser(string path) {
 		find_fn find;
 		find = (find_fn)dlsym(h, "findProto");
 
+#endif //WIN32
+
+
+
 		cout << "Proto loaded: " << proto() << endl;
 
 		vector<string> ds = tags();
@@ -57,11 +70,12 @@ PacketParser::PacketParser(string path) {
 		find_fns[proto()] = find;
 
 		handles.push_back(h);
-	}
 
 #ifdef WIN32
-
+	} while (FindNextFile(h, &info));
+	FindClose(h);
 #else
+	}
 	closedir(dp);
 #endif
 	parse_fns["test"] = test_parse_fn;
