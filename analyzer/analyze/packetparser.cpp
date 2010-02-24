@@ -79,8 +79,12 @@ PacketParser::PacketParser(string path) {
 }
 
 PacketParser::~PacketParser() {
+#ifdef WIN32
+
+#else
 	for_each(handles.begin(), handles.end(), dlclose);
 	//	dlclose(handle);
+#endif
 }
 
 string PacketParser::findProto(char* buf, int len) {

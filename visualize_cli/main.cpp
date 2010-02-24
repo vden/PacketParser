@@ -21,8 +21,8 @@ int main(int argc, char **argv)
 	StringFilter *f;
 	PacketStore* ps;
 
-	f = new StringFilter("wlan.ssid = 123321");
-//	a->addFilter(dynamic_cast<Filter*>(f));
+	f = new StringFilter("wlan.mgmt.ssid = 123321");
+	a->addFilter(dynamic_cast<Filter*>(f));
 
 	f = new StringFilter("wlan.mode = b");
 //	a->addFilter(dynamic_cast<Filter*>(f));
