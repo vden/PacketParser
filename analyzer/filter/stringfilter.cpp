@@ -16,24 +16,36 @@ StringFilter::StringFilter(string expr): Filter(expr) {
 bool StringFilter::applyFilter(PacketInfo* pi) {
 	cout << "i'm string filter " << filterExpr << endl;
 
-	vector<string>::iterator it3;
-	for (it3=expr.begin();it3!=expr.end();it3++) {
-		cout << "L: " << *it3 << "; ";
+	vector<string>::iterator it;
+	for (it=expr.begin();it!=expr.end();it++) {
+		cout << "L: " << *it << "; " << endl;
 	}
 
 	vector<string> localExpr(expr);
-	vector<string>::iterator it;
-	for (it=localExpr.begin();it!=localExpr.end();it++) {
+	int i;
+	for (it=localExpr.begin(), i=0; it!=localExpr.end();it++, i++) {
 		if ( pi->find(*it) != pi->end())
 			*it = (*pi)[*it];
-		else
-			*it = "";
+	/*	else
+		{
+			if ( (expr[i] != "=") && (expr[i] != "<>") ) {
+				if ((i < (int) expr.size() - 1)) {
+					cout << i << " " << expr[i] << endl;
+					if ((expr[i + 1] != "=") && (expr[i + 1] != "<>")) {
+						// next lexem is not sign
+						*it = "";
+					}
+				} else
+					// last lexem
+					*it = "";
+			}
+		}*/
 	}
 
 
-	vector<string>::iterator it1;
-	for (it1=localExpr.begin();it1!=localExpr.end();it1++) {
-		cout << "L2: " << *it1 << "; ";
+	for (it=localExpr.begin();it!=localExpr.end();it++) {
+		cout << "L2: " << *it << "; " << endl;
+
 	}
 
 
