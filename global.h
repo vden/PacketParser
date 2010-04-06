@@ -15,9 +15,23 @@
 
 #ifdef WIN32
 #include <windows.h>
-#endif
+#include <windef.h>
+
+typedef unsigned long long u_quad_t;
+typedef unsigned short ushort;
+typedef unsigned int uint;
+
+//TODO: find correct replacements in windows.h
+typedef unsigned char u_int8_t;
+typedef unsigned int u_int16_t;
+typedef unsigned long u_int32_t;
+typedef unsigned long long u_int64_t;
+
+#else
 
 #include <sys/types.h>
+
+#endif
 
 using namespace std;
 
