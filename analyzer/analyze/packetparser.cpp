@@ -1,4 +1,6 @@
-#include <dlfcn.h>
+#ifndef WIN32
+  #include <dlfcn.h>
+#endif
 #include <algorithm>
 #include <dirent.h>
 #include <global.h>
@@ -13,21 +15,31 @@ PacketInfo* test_parse_fn(char* buf, int len) {
 }
 
 PacketParser::PacketParser(string path) {
-	void* h;
-
 #ifdef WIN32
-	flist list = {0, 0, NULL};
-	HANDLE h;
+	//flist list = {0, 0, NULL};
+	HANDLE fh;
+	HMODULE h;
 	WIN32_FIND_DATA info;
 	int i;
 
 	SetCurrentDirectory(path.c_str());
 	// build a list of files
-	h = FindFirstFile("libparse*.*", &info);
-	if (h != INVALID_HANDLE_VALUE) {
+	fh = FindFirstFile("libparse*.*", &info);
+	if (fh != INVALID_HANDLE_VALUE) {
 		do {
+			h = LoadLibrary(info.cFileName);
+
+			parse_fn fn;
+			fn = (parse_fn)GetProcAddress(h, "parse");
+			proto_fn proto;
+			proto = (proto_fn)GetProcAddress(h, "proto");
+			tags_fn tags;
+			tags = (tags_fn)GetProcAddress(h, "tags");
+			find_fn find;
+			find = (find_fn)GetProcAddress(h, "findProto");
 
 #else // WIN32
+	void* h;
 	DIR *dp;
 	struct dirent *dir;
 	if((dp = opendir(path.c_str())) == NULL) {
@@ -69,8 +81,9 @@ PacketParser::PacketParser(string path) {
 		handles.push_back(h);
 
 #ifdef WIN32
-	} while (FindNextFile(h, &info));
-	FindClose(h);
+	} while (FindNextFile(fh, &info));
+	FindClose(fh);
+}
 #else
 	}
 	closedir(dp);
@@ -80,7 +93,7 @@ PacketParser::PacketParser(string path) {
 
 PacketParser::~PacketParser() {
 #ifdef WIN32
-
+	for_each(handles.begin(), handles.end(), FreeLibrary);
 #else
 	for_each(handles.begin(), handles.end(), dlclose);
 	//	dlclose(handle);

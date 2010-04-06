@@ -23,10 +23,10 @@ private:
 	// offset for local buffer
 	u_quad_t localOffset;
 public:
-	HDDStore(string path, uint size);
+	HDDStore(string path, unsigned int size);
 	~HDDStore();
 	void feedPacket(PacketInfo*);
-	PacketInfo* packetByNumber(ulong);
+	PacketInfo* packetByNumber(unsigned long);
 };
 
 #endif /* HDDSTORE_H_ */

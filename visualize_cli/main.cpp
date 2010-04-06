@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 	pi["test1"] = "8123";
 	pi["test2"] = "5";
 
-	HDDStore *hs = new HDDStore("/tmp/hstore", 1);
+	HDDStore *hs = new HDDStore("hstore", 1);
 	a->addStore(dynamic_cast<PacketStore*>(hs));
 
 	char* buf = 0;

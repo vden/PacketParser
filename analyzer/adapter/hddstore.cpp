@@ -11,7 +11,7 @@
 #include "packetstore.h"
 #include "hddstore.h"
 
-HDDStore::HDDStore(string path, uint size) : BufferedPacketStore(size) {
+HDDStore::HDDStore(string path, unsigned int size) : BufferedPacketStore(size) {
 	fs.open(path.c_str(), ios::binary | ios::in | ios::out | ios::trunc);
 
 	if (!fs.is_open())
@@ -52,8 +52,8 @@ void HDDStore::feedPacket(PacketInfo* pi) {
 
 	dataReady = true;
 }
-
-PacketInfo* HDDStore::packetByNumber(ulong n) {
+#define ulong unsigned long
+PacketInfo* HDDStore::packetByNumber(unsigned long n) {
 	if (n >= (ulong)fileMap.size()) return 0;
 
 	if ( (n >= localOffset) && (n < localOffset + m_size) ) {

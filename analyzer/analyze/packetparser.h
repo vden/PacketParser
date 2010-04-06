@@ -11,7 +11,11 @@ class PacketParser {
 private:
     map<string,parse_fn> parse_fns;
     map<string,find_fn> find_fns;
+#ifndef WIN32
     vector<void*> handles;
+#else
+    vector<HMODULE> handles;
+#endif
 
 public:
     PacketParser(string);
