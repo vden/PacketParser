@@ -82,177 +82,102 @@ uint loadNextTag(PacketInfo* pi, char* buf, uint offset) {
 	return offset+len;
 }
 
+bool checkPresence(short i, PacketInfo* pi) {
+	u_int64_t f = (u_int64_t)TAG("presence");
+	f >>= i;
+	return (f & 0x1);
+}
+
 PacketInfo* parse(char* buf, int len) {
 	cout << "parselib " << PROTO << endl;
 
 	PacketInfo *pi = new PacketInfo;
 
-	// frame control sequence; 0-1 bytes
-	INSERT_TAG("flags", 1, 1);
-	INSERT_TAGm("fc.protoversion", 1, 0x03, 0, 0);
-	INSERT_TAGm("fc.type", 1, 0x0C, 2, 0);
-	INSERT_TAGm("fc.subtype", 1, 0xF0, 4, 0);
-	INSERT_TAGm("fc.ds", 1, 0x03, 0, 1);
-	INSERT_TAGm("fc.frag", 1, 0x04, 2, 1);
-	INSERT_TAGm("fc.retry", 1, 0x08, 3, 1);
-	INSERT_TAGm("fc.pwrmgmt", 1, 0x10, 4, 1);
-	INSERT_TAGm("fc.moredata", 1, 0x20, 5, 1);
-	INSERT_TAGm("fc.protected", 1, 0x40, 6, 1);
-	INSERT_TAGm("fc.order", 1, 0x80, 7, 1);
+	//ieee80211_radiotap_header *rtap_header = new ieee80211_radiotap_header;
+	INSERT_TAG("version", 1, 0);
+	INSERT_TAG("hdr_len", 2, 2);
+	INSERT_TAG("presence", 4, 4);
 
-	// type + subtype in 1 byte
-	int ft = (int)TAG("fc.type") << 4 | (int)TAG("fc.subtype");
-	INSERT_TAGm("fulltype", 1, 0xFC, 0, 0);
-	TAG("fulltype") = (char*)ft;
-
-	// duration; 2-3 bytes
-	INSERT_TAG("duration", 2, 2);
-
-	// ************ CONTROL FRAMES *******************
-	switch ((uint)TAG("fulltype")) {
-	case 0x1B:
-		// RTS Control frame
-		INSERT_TAG("receiver", 6, 4);
-		INSERT_TAG("transmitter", 6, 10); break;
-	case 0x1C:
-		// CTS Control frame
-	case 0x1D:
-		// Ack Control frame
-		INSERT_TAG("receiver", 6, 4); break;
-	case 0x1A:
-		// PS-Poll Control frame
-		INSERT_TAG("aid", 2, 2);
-		INSERT_TAG("bssid", 6, 4);
-		INSERT_TAG("transmitter", 6, 10); break;
-	case 0x1E:
-		// CF-End Control frame
-	case 0x1F:
-		// CF-End + CF-Ack Control frame
-		INSERT_TAG("receiver", 6, 4);
-		INSERT_TAG("bssid", 6, 10); break;
-	};
-
-	if ((uint)TAG("fc.type") == 0x01) {
-		// Control frames have not data payload
-		INSERT_TAG("data", 1, 0);
-		TAG("data") = 0;
+	uint data_offset = (uint)TAG("hdr_len");
+	if (checkPresence(0, pi)) {
+		// TSFT
+		INSERT_TAG("tsft", 8, data_offset);
+		data_offset += 8;
+	}
+	if (checkPresence(1, pi)) {
+		// flags
+		INSERT_TAG("flags", 1, data_offset);
+		data_offset++;
+	}
+	if (checkPresence(2, pi)) {
+		// Rate
+		INSERT_TAG("rate", 1, data_offset);
+		data_offset++;
+	}
+	if (checkPresence(3, pi)) {
+		// Channel
+		INSERT_TAG("channel.freq", 2, data_offset);
+		INSERT_TAG("channel.flags", 2, data_offset+2);
+		data_offset+=4;
+	}
+	if (checkPresence(4, pi)) {
+		// FHSS
+		INSERT_TAG("fhss.set", 1, data_offset);
+		INSERT_TAG("fhss.pattern", 1, data_offset+1);
+		data_offset+=2;
+	}
+	if (checkPresence(5, pi)) {
+		// Antenna signal
+		INSERT_TAG("ant_signal", 1, data_offset);
+		data_offset++;
+	}
+	if (checkPresence(6, pi)) {
+		// Antenna noise
+		INSERT_TAG("ant_noise", 1, data_offset);
+		data_offset++;
+	}
+	if (checkPresence(7, pi)) {
+		// Lock quality
+		INSERT_TAG("lock_quality", 2, data_offset);
+		data_offset += 2;
+	}
+	if (checkPresence(8, pi)) {
+		// TX attenuation
+		INSERT_TAG("tx_att", 2, data_offset);
+		data_offset+=2;
+	}
+	if (checkPresence(9, pi)) {
+		// db TX attenuation
+		INSERT_TAG("tx_att_db", 2, data_offset);
+		data_offset+=2;
+	}
+	if (checkPresence(10, pi)) {
+		// dBm TX power
+		INSERT_TAG("tx_power", 1, data_offset);
+		data_offset++;
+	}
+	if (checkPresence(11, pi)) {
+		// Antenna
+		INSERT_TAG("antenna", 1, data_offset);
+		data_offset++;
+	}
+	if (checkPresence(12, pi)) {
+		// dB antenna signal
+		INSERT_TAG("ant_signal_db", 1, data_offset);
+		data_offset++;
+	}
+	if (checkPresence(13, pi)) {
+		// dB antenna noise
+		INSERT_TAG("ant_noise_db", 1, data_offset);
+		data_offset++;
+	}
+	if (checkPresence(14, pi)) {
+		// RX flags
+		INSERT_TAG("rx_flags", 2, data_offset);
+		data_offset +=2;
 	}
 
-	// ********* DATA FRAMES *******************
-	if ((uint)TAG("fc.type") == 0x02) {
-		// Data frame, is independent of subtype
-
-		switch ((uint)TAG("fc.ds")) {
-		case 0x00:
-			INSERT_TAG("dest", 6, 4);
-			INSERT_TAG("src", 6, 10);
-			INSERT_TAG("bssid", 6, 16); break;
-		case 0x01:
-			INSERT_TAG("bssid", 6, 4);
-			INSERT_TAG("src", 6, 10);
-			INSERT_TAG("dest", 6, 16); break;
-		case 0x02:
-			INSERT_TAG("dest", 6, 4);
-			INSERT_TAG("bssid", 6, 10);
-			INSERT_TAG("src", 6, 16); break;
-		case 0x03:
-			INSERT_TAG("receiver", 6, 4);
-			INSERT_TAG("transmitter", 6, 10);
-			INSERT_TAG("dest", 6, 16);
-			INSERT_TAG("src", 6, 24); break;
-		}
-
-		// Data payload
-		INSERT_TAG("data", len - 30, 30);
-		INSERT_TAGm("seq", 2, 0xFFF0, 4, 22);
-		INSERT_TAGm("frag", 2, 0x000F, 0, 22);
-	}
-
-	// ******** MANAGEMENT FRAMES *********************************
-	if ((uint)TAG("fc.type") == 0x00) {
-		// Management frame, is partially independent of subtype
-
-		INSERT_TAG("data", len - 24, 24);
-		int off;
-		switch ((uint)TAG("fc.subtype")) {
-		case 0x08:
-			// Beacon frame
-		case 0x05:
-			// Probe response frame
-
-			// Fixed width fields
-			INSERT_TAG("mgmt.timestamp", 8, 24);
-			INSERT_TAG("mgmt.beacon_interval", 2, 32);
-			INSERT_TAG("mgmt.capability", 2, 34);
-
-			// tagged fields
-			off = 36;
-			while ( off < len )
-				off = loadNextTag(pi, buf, off);
-			break;
-
-		case 0x0A:
-			// Dissasociation frame
-			INSERT_TAG("mgmt.reason", 2, 24);
-			break;
-
-		case 0x00:
-			// Association req frame
-			INSERT_TAG("mgmt.capability", 2, 24);
-			INSERT_TAG("mgmt.listen_interval", 2, 26);
-
-			off = 28;
-			while ( off < len )
-				off = loadNextTag(pi, buf, off);
-			break;
-
-		case 0x01:
-			// Association resp frame
-		case 0x03:
-			// Reassociation resp frame
-			INSERT_TAG("mgmt.capability", 2, 24);
-			INSERT_TAG("mgmt.status", 2, 26);
-			INSERT_TAG("mgmt.aid", 2, 28);
-
-			off = 30;
-			while ( off < len )
-				off = loadNextTag(pi, buf, off);
-			break;
-
-		case 0x02:
-			// Reassociation req frame
-			INSERT_TAG("mgmt.capability", 2, 24);
-			INSERT_TAG("mgmt.listen_interval", 2, 26);
-			INSERT_TAG("mgmt.current_ap", 6, 28);
-
-			off = 34;
-			while ( off < len )
-				off = loadNextTag(pi, buf, off);
-			break;
-
-		case 0x04:
-			// Probe request frame
-			off = 24;
-			while ( off < len )
-				off = loadNextTag(pi, buf, off);
-			break;
-
-		case 0x0B:
-			// authentication frame
-			INSERT_TAG("mgmt.auth.algorithm", 2, 24);
-			INSERT_TAG("mgmt.auth.seq", 2, 26);
-
-			off = 28;
-			while ( off < len )
-				off = loadNextTag(pi, buf, off);
-			break;
-
-		case 0x0C:
-			// deauthentication frame
-			INSERT_TAG("mgmt.reason", 2, 24);
-		}
-	}
-
+	INSERT_TAG("data", len - data_offset, data_offset);
 	return pi;
 };
 

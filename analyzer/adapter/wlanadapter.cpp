@@ -57,7 +57,7 @@ string WLANAdapter::getSubType(int ft) {
 void WLANAdapter::feedPacket(PacketInfo* pi) {
 	dataReady = false;
 
-	current = *pi;
+	current = PacketInfo(*pi);
 	cout << "WLAN adapter feeding packet" << endl;
 
 	(*pi)["wlan.type_str"] = new char[24];

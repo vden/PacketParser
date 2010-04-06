@@ -18,7 +18,7 @@ private:
 	const string findProto(char*,int);
 
 public:
-	Analyzer();
+	Analyzer(string path="./");
 
 	bool nextPacket(char*,int);
 	int addFilter(Filter* f) { captureFilters.push_back(f); return (int)captureFilters.size(); };

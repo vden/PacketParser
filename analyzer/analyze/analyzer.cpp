@@ -1,14 +1,16 @@
 
 #include "analyzer.h"
 
-Analyzer::Analyzer() {
-	parser = new PacketParser("./");
+Analyzer::Analyzer(string path) {
+	parser = new PacketParser(path);
 }
 
 bool Analyzer::nextPacket(char *buf, int len) {
 	PacketInfo *p = new PacketInfo;
 	string proto = parser->findProto(buf, len);
 	string errorField = proto + ".error";
+
+	cout << "Analyzer:: nextPacker" << endl;
 
 	if (!parser->parse(buf, len, p, proto)) {
 		(*p)[errorField] = "Protocol not found";
