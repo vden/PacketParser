@@ -16,7 +16,7 @@ protected:
 public:
 	BufferedPacketStore(unsigned int);
 	virtual ~BufferedPacketStore();
-	virtual PacketInfo* packetByNumber(ulong) = 0;
+    virtual PacketInfo* packetByNumber(unsigned long) = 0;
 	unsigned int size() {return m_size; };
 };
 
